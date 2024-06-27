@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>计步器</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        div#app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        div#step{
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>计步器</h1>
+    <div id="step"><span>0</span>步</div>
+    <div id="time">00:00:00:000</div>
+    <div>
+        <button class="btn-success btn" onclick="start()">开始计步</button>
+        <button class="btn btn-danger" onclick="stop()">结束计步</button>
+        <button class="btn btn-info" onclick="reset()">重置步数</button>
+    </div>
+    <div>用户名:<input type="text"placeholder="设置用户名" id="user" value="匿名"><button class="btn btn-primary" onclick="search()">记录查询</button></div>
+
+    <div id="history">
+        <table class="table border table-hover">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<br/>
+
+</body>
+<script src="js/axios.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    let SHAKE_THRESHOLD = 300;
+    let last_update;
+    let x, y, z, last_x, last_y, last_z;
+    let stepCounter;
+    let begin,user
+    let flag=false
+
+    function start() {
+        if (window.DeviceMotionEvent) {
+            reset()
+            flag=true
+            document.querySelector("#history table thead").innerHTML =""
+            document.querySelector('#history table tbody').innerHTML =""
+            window.addEventListener('devicemotion', deviceMotionHandler, false);
+
+        }else document.querySelector("body").innerHTML="浏览器不支持此功能"
+    }
+    function stop() {
+        if (flag){
+            flag=false
+            window.removeEventListener('devicemotion', deviceMotionHandler)
+            user = document.querySelector("#user").value || "匿名"
+            axios({
+                url: 'api/save',
+                method: 'post',
+                data: {
+                    user,
+                    step: stepCounter,
+                    begin: formatDate(begin),
+                    end: formatDate(new Date().getTime())
+                }
+            })
+        }
+        else alert("计步还未开始")
+    }
+    function reset() {
+        stepCounter=0
+        speed=0
+        begin = new Date().getTime()
+        last_update=new Date().getTime();
+        document.querySelector("#step span").innerHTML=stepCounter.toString()
+        document.querySelector("#time").innerHTML="00:00:00:000"
+        //document.querySelector('#speed').innerHTML=speed.toString()
+    }
+    function search(){
+        user = document.querySelector("#user").value||"匿名"
+        document.querySelector("#history table thead").innerHTML =""
+        document.querySelector('#history table tbody').innerHTML =""
+        axios({
+            url: `api/getRecord?user=${user}`
+        }).then(r=>{
+            console.log(r.data.length)
+            Data = r.data.map(d => `<tr>
+                                        <td>${d.user}</td>
+                                            <td>${d.step}</td>
+                                            <td>${d.begin}</td>
+                                            <td>${d.end}</td>
+                                        </tr>`).join('')
+            if (r.data.length!=0){
+                document.querySelector("#history table thead").innerHTML ='<tr><th>用户</th><th>步数</th><th>开始时间</th><th>结束时间</th></tr>'
+                document.querySelector('#history table tbody').innerHTML = Data
+            }else alert("没有此用户数据")
+
+        })
+    }
+    function deviceMotionHandler(eventData) {
+
+        const acceleration = eventData.accelerationIncludingGravity;
+        //alert(newDate().getTime());
+        const curTime = new Date().getTime();
+        document.querySelector("#time").innerHTML=formatDate(curTime-begin,true)
+        // alert(curTime - last_update);
+        if ((curTime - last_update)> 300) {
+
+            const diffTime = curTime - last_update;
+            last_update = curTime;
+
+            x = acceleration.x;
+            y = acceleration.y;
+            z = acceleration.z;
+            //document.querySelector("#x").innerHTML=x.toString()
+            //document.querySelector("#y").innerHTML=y.toString()
+            //document.querySelector("#z").innerHTML=z.toString()
+            const speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+            //document.querySelector('#speed').innerHTML=speed.toString()
+            if (speed > SHAKE_THRESHOLD) {
+                stepCounter++;
+                document.querySelector("#step span").innerHTML=stepCounter.toString()
+            }
+            last_x = x;
+            last_y = y;
+            last_z = z;
+        }
+    }
+    function formatDate(timestamp,bool=false) {
+        let date = new Date(timestamp)
+        let year = date.getFullYear();
+        let month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从0开始，所以需要+1，并使用padStart补零
+        let day = String(date.getDate()).padStart(2, '0'); // 使用padStart补零
+        let hours = String(date.getHours()).padStart(2, '0'); // 使用padStart补零
+        let minutes = String(date.getMinutes()).padStart(2, '0'); // 使用padStart补零
+        let seconds = String(date.getSeconds()).padStart(2, '0'); // 使用padStart补零
+        let milliseconds=String(date.getMilliseconds()).padStart(3,'0');
+        if (bool){
+            return `${String(date.getHours()-8).padStart(2, '0')}:${minutes}:${seconds}.${milliseconds}`;
+        }
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+</script>
+</html>
