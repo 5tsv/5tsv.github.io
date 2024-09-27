@@ -12,37 +12,79 @@
 
 <body>
 <div id="app">
-    <div class="w">
-        <div class="e">
-            <div><label>驱逐舰</label>：<input v-model.number="weight.驱逐舰"></div>
-            <div><label>轻巡洋舰</label>：<input v-model.number="weight.轻巡洋舰"></div>
-            <div><label>重巡洋舰</label>：<input v-model.number="weight.重巡洋舰"></div>
-            <div><label>轻型航母</label>：<input v-model.number="weight.轻型航母"></div>
-            <div><label>战列舰</label>：<input v-model.number="weight.战列舰"></div>
-            <div><label>战列巡洋舰</label>：<input v-model.number="weight.战列巡洋舰"></div>
-        </div>
+        <div style="display: grid;grid-template-columns: repeat(auto-fit,480px);"><div>
+            <table>
+            <tr><th colspan="2">工程局系数</th><th colspan="2">资源权重</th></tr>
+            <tr>
+               <th>驱逐舰</th>
+               <td><input v-model.number="weight.驱逐舰" type="number"></td>
+               <th>油</th>
+               <td><input v-model.number="weight.油" type="number"></td>
+            </tr>
+            <tr>
+               <th>轻巡洋舰</th>
+               <td><input v-model.number="weight.轻巡洋舰" type="number"></td>
+               <th>弹</th>
+               <td><input v-model.number="weight.弹" type="number"></td>
+            </tr>
+            <tr>
+               <th>重巡洋舰</th>
+               <td><input v-model.number="weight.重巡洋舰" type="number"></td>
+               <th>钢</th>
+               <td><input v-model.number="weight.钢" type="number"></td>
+            </tr>
+            <tr>
+               <th>轻型航母</th>
+               <td><input v-model.number="weight.轻型航母" type="number"></td>
+               <th>铝</th>
+               <td><input v-model.number="weight.铝" type="number"></td>
+            </tr>
+            <tr>
+               <th>战列舰</th>
+               <td><input v-model.number="weight.战列舰" type="number"></td>
+               <td colspan="2" rowspan="2"><button @click="saveStateweight">保存</button></td>
+            </tr>
+            <tr>
+               <th>战列巡洋舰</th>
+               <td><input v-model.number="weight.战列巡洋舰" type="number"></td>
+            </tr>
+            </table></div>
         <div>
-            <div><label>油</label>：<input v-model.number="weight.油" type="number"></div>
-            <div><label>弹</label>：<input v-model.number="weight.弹" type="number"></div>
-            <div><label>钢</label>：<input v-model.number="weight.钢" type="number"></div>
-            <div><label>铝</label>：<input v-model.number="weight.铝" type="number"></div>
-            <button @click="saveStateweight">保存</button>
-        </div>
-        <div>
-            <div><label>火力</label>：<input v-model.number="user.火力" type="number"></div>
-            <div><label>鱼雷</label>：<input v-model.number="user.鱼雷" type="number"></div>
-            <div><label>装甲</label>：<input v-model.number="user.装甲" type="number"></div>
-            <div><label>对空</label>：<input v-model.number="user.对空" type="number"></div>
-            <div><label>经验</label>：<input v-model.number="user.经验" type="number"></div>
-            <button @click="getshipsolve">计算</button>
-            <button @click="refreshData">更新</button>
-            <button @click="resetShipData">初始化</button>
-            <button @click="toAdd">添加舰船</button>
-            <button @click="downloadData">导出</button>
-            <a id="download-link" target="_blank" style="display: none"></a>
-            <input type="file" @change="loadJsonFile" ></input>
-        </div>
-    </div>
+            <table>
+            <tr>
+               <th>火力等级</th>
+               <td><input v-model.number="user.火力" type="number"></td>
+            </tr>
+            <tr>
+               <th>鱼雷等级</th>
+               <td><input v-model.number="user.鱼雷" type="number"></td>
+            </tr>
+            <tr>
+               <th>装甲等级</th>
+               <td><input v-model.number="user.装甲" type="number"></td>
+            </tr>
+            <tr>
+               <th>对空等级</th>
+               <td><input v-model.number="user.对空" type="number"></td>
+            </tr>
+            <tr>
+               <th>每级经验</th>
+               <td><input v-model.number="user.经验" type="number"></td>
+            </tr>
+            <tr>
+            <td><button @click="getshipsolve">计算</button></td>
+            <td><button @click="refreshData">更新</button></td>
+            </tr>
+            <tr>
+            <td><button @click="resetShipData">初始化</button></td>
+            <td><button @click="toAdd">添加舰船</button></td>
+            </tr>
+            <tr>
+            <td><a id="download-link" target="_blank" style="display: none"></a>
+            <input type="file" @change="loadJsonFile" ></input></td>
+            <td><button @click="downloadData">导出</button></td>
+            </tr>
+            </table></div></div>
         <div>
             <table>
             <tr>
@@ -162,9 +204,7 @@
     </div>
 </div>
 </body>
-<script>
 
-</script>
 <script>
   const loadState = key => {
     try {
@@ -3420,12 +3460,5 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     }
 
-    .w {
-        display: flex;
-    }
-
-    .w .e label {
-        width: 80px
-    }
 </style>
 </html>
