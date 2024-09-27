@@ -324,13 +324,15 @@
           总消耗:0,
           总数量:0
         }
-        let data=this.getModel.variables
         this.res.forEach(([key,x])=>{
-          temp.火力+=data[key].火力*x
-          temp.鱼雷+=data[key].鱼雷*x
-          temp.装甲+=data[key].装甲*x
-          temp.对空+=data[key].对空*x
-          temp.总消耗+=data[key].消耗*x
+          let ship=this.shipData[this.shipIndex[key]]
+          q = this.weight[ship.舰种] || 1
+          //console.log(key)
+          temp.火力+=Math.floor(ship.火力 * q)*x
+          temp.鱼雷+=Math.floor(ship.鱼雷 * q)*x
+          temp.装甲+=Math.floor(ship.装甲 * q)*x
+          temp.对空+=Math.floor(ship.对空 * q)*x
+          temp.总消耗+=(ship.油 * this.weight.油 + ship.弹 * this.weight.弹 + ship.钢 * this.weight.钢 + ship.铝 * this.weight.铝)*x
           temp.总数量+=x
         })
         return temp
