@@ -376,8 +376,8 @@
       },
       getshipsolve () {
         this.res = []
-        res = solver.Solve(this.getModel)
         alert('计算中')
+        res = solver.Solve(this.getModel)
         console.log(res)
         alert('计算完成')
         this.extraShip.forEach(item => {
