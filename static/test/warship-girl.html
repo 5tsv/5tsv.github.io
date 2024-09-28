@@ -23,7 +23,7 @@
           <tr>
             <th colspan=" 2">工程局系数</th>
           </tr>
-          <tr v-for="(item,index) in Object.keys(weight).filter(i=>i.length>1)" :key="index>
+          <tr v-for="(item,index) in Object.keys(weight).filter(i=>i.length>1)" :key="index">
           <th>{{item}}</th>
           <td><input v-model.number="weight[item]" type="number">
             </td>
@@ -53,7 +53,7 @@
           <tr>
             <th colspan="2">资源权重</th>
           </tr>
-          <tr v-for="(item,index) in Object.keys(weight).filter(i=>i.length=1)" :key="index>
+          <tr v-for="(item,index) in Object.keys(weight).filter(i=>i.length=1)" :key="index">
             <th>{{item}}</th>
             <td><input v-model.number="weight[item]" type="number">
             </td>
