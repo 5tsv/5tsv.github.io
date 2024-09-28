@@ -416,7 +416,7 @@
         alert('计算完成')
         this.extraShip.forEach(item => {
           if (res[item.舰名] != undefined) {
-            temp = [item.舰名, res[item.舰名]]
+            temp = [item.舰名, Math.ceil(res[item.舰名])]
             console.log(temp)
             this.res.push(temp)
           }
