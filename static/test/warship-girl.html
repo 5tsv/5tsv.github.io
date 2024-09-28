@@ -18,44 +18,44 @@
 <body>
   <div id="app">
     <div style="display: grid;grid-template-columns: repeat(auto-fit,310px);">
-      <div>
+      <divstyle="display: flex;">
         <table>
           <tr>
-            <th colspan="2">工程局系数</th>
-          </tr>
-          <tr>
-            <th>驱逐舰</th>
-            <td><input v-model.number="weight.驱逐舰" type="number"></td>
-          </tr>
-          <tr>
-            <th>轻巡洋舰</th>
-            <td><input v-model.number="weight.轻巡洋舰" type="number"></td>
-          </tr>
-          <tr>
-            <th>重巡洋舰</th>
-            <td><input v-model.number="weight.重巡洋舰" type="number"></td>
-          </tr>
-          <tr>
-            <th>轻型航母</th>
-            <td><input v-model.number="weight.轻型航母" type="number"></td>
-          </tr>
-          <tr>
-            <th>战列舰</th>
-            <td><input v-model.number="weight.战列舰" type="number"></td>
-          </tr>
-          <tr>
-            <th>战列巡洋舰</th>
-            <td><input v-model.number="weight.战列巡洋舰" type="number"></td>
-          </tr>
+            <th colspan=" 2">工程局系数</th>
+        </tr>
+        <tr v-for="(item,index) in Object.keys(weight).filter(i=>i.length>1)" :key="index>
+          <th>{{item}}</th>
+          <td><input v-model.number="weight[item]" type="number"></td>
+        </tr>
+        <!-- <tr>
+          <th>轻巡洋舰</th>
+          <td><input v-model.number="weight.轻巡洋舰" type="number"></td>
+        </tr>
+        <tr>
+          <th>重巡洋舰</th>
+          <td><input v-model.number="weight.重巡洋舰" type="number"></td>
+        </tr>
+        <tr>
+          <th>轻型航母</th>
+          <td><input v-model.number="weight.轻型航母" type="number"></td>
+        </tr>
+        <tr>
+          <th>战列舰</th>
+          <td><input v-model.number="weight.战列舰" type="number"></td>
+        </tr>
+        <tr>
+          <th>战列巡洋舰</th>
+          <td><input v-model.number="weight.战列巡洋舰" type="number"></td>
+        </tr> -->
         </table>
         <table>
           <tr>
             <th colspan="2">资源权重</th>
           </tr>
-          <tr>
-            <th>油</th>
-            <td><input v-model.number="weight.油" type="number"></td>
-          </tr>
+          <tr v-for="(item,index) in Object.keys(weight).filter(i=>i.length=1)" :key="index>
+            <th>{{item}}</th>
+            <td><input v-model.number="weight[item]" type="number"></td>
+          <!-- </tr>
           <tr>
             <th>弹</th>
             <td><input v-model.number="weight.弹" type="number"></td>
@@ -67,168 +67,168 @@
           <tr>
             <th>铝</th>
             <td><input v-model.number="weight.铝" type="number"></td>
-          </tr>
+          </tr> -->
           <tr>
             <td colspan="2" rowspan="2"><button @click="saveStateweight">保存</button></td>
           </tr>
         </table>
-      </div>
-      <div>
-        <table>
-          <tr>
-            <th>火力等级</th>
-            <td><input v-model.number="user.火力" type="number"></td>
-          </tr>
-          <tr>
-            <th>鱼雷等级</th>
-            <td><input v-model.number="user.鱼雷" type="number"></td>
-          </tr>
-          <tr>
-            <th>装甲等级</th>
-            <td><input v-model.number="user.装甲" type="number"></td>
-          </tr>
-          <tr>
-            <th>对空等级</th>
-            <td><input v-model.number="user.对空" type="number"></td>
-          </tr>
-          <tr>
-            <th>每级经验</th>
-            <td><input v-model.number="user.经验" type="number"></td>
-          </tr>
-          <tr>
-            <td><button @click="getshipsolve">计算</button></td>
-            <td><button @click="refreshData">更新</button></td>
-          </tr>
-          <tr>
-            <td><button @click="resetShipData">初始化</button></td>
-            <td><button @click="toAdd">添加舰船</button></td>
-          </tr>
-          <tr>
-            <td><a id="download-link" target="_blank" style="display: none"></a>
-              <input type="file" @change="loadJsonFile"></input>
-            </td>
-            <td><button @click="downloadData">导出</button></td>
-          </tr>
-        </table>
-      </div>
     </div>
     <div>
       <table>
         <tr>
-          <th>火力需求</th>
-          <th>鱼雷需求</th>
-          <th>装甲需求</th>
-          <th>对空需求</th>
-          <th>可强化舰船数</th>
+          <th>火力等级</th>
+          <td><input v-model.number="user.火力" type="number"></td>
         </tr>
         <tr>
-          <td>{{getModel.constraints.火力.min}}</td>
-          <td>{{getModel.constraints.鱼雷.min}}</td>
-          <td>{{getModel.constraints.装甲.min}}</td>
-          <td>{{getModel.constraints.对空.min}}</td>
-          <td>{{shipSum}}</td>
-        </tr>
-      </table>
-      <table>
-        <tr>
-          <th>火力强化</th>
-          <th>鱼雷强化</th>
-          <th>装甲强化</th>
-          <th>对空强化</th>
-          <th>总消耗</th>
-          <th>总数量</th>
+          <th>鱼雷等级</th>
+          <td><input v-model.number="user.鱼雷" type="number"></td>
         </tr>
         <tr>
-          <td>{{resData.火力}}</td>
-          <td>{{resData.鱼雷}}</td>
-          <td>{{resData.装甲}}</td>
-          <td>{{resData.对空}}</td>
-          <td>{{resData.总消耗}}</td>
-          <td>{{resData.总数量}}</td>
+          <th>装甲等级</th>
+          <td><input v-model.number="user.装甲" type="number"></td>
         </tr>
-      </table>
-      <table v-show=res[0]>
         <tr>
-          <th>舰名</th>
-          <th>数量</th>
+          <th>对空等级</th>
+          <td><input v-model.number="user.对空" type="number"></td>
         </tr>
-        <tr v-for="(ship,index) in res" :key=index>
-          <td>{{ship[0]}}</td>
-          <td>{{ship[1]}}</td>
+        <tr>
+          <th>每级经验</th>
+          <td><input v-model.number="user.经验" type="number"></td>
+        </tr>
+        <tr>
+          <td><button @click="getshipsolve">计算</button></td>
+          <td><button @click="refreshData">更新</button></td>
+        </tr>
+        <tr>
+          <td><button @click="resetShipData">初始化</button></td>
+          <td><button @click="toAdd">添加舰船</button></td>
+        </tr>
+        <tr>
+          <td><a id="download-link" target="_blank" style="display: none"></a>
+            <input type="file" @change="loadJsonFile"></input>
+          </td>
+          <td><button @click="downloadData">导出</button></td>
         </tr>
       </table>
     </div>
+  </div>
+  <div>
     <table>
       <tr>
-        <th>舰名</th>
-        <th>舰种</th>
-        <th>火力</th>
-        <th>鱼雷</th>
-        <th>装甲</th>
-        <th>对空</th>
-        <th>数量</th>
-        <th>操作</th>
+        <th>火力需求</th>
+        <th>鱼雷需求</th>
+        <th>装甲需求</th>
+        <th>对空需求</th>
+        <th>可强化舰船数</th>
       </tr>
-      <tr v-for="(ship,index) in shipData" :key=index>
-        <td>{{ ship.舰名 }}</td>
-        <td>{{ ship.舰种 }}</td>
-        <td>{{ ship.火力 }}</td>
-        <td>{{ ship.鱼雷 }}</td>
-        <td>{{ ship.装甲 }}</td>
-        <td>{{ ship.对空 }}</td>
-        <td>
-          <div style="display: flex;/*! flex-direction: row; */">
-            <button @click=changeShipSum(shipIndex[ship.舰名],-1)>-</button>
-            {{ ship.数量 }}
-            <button @click=changeShipSum(shipIndex[ship.舰名],1)>+</button>
-          </div>
-        </td>
-        <td>
-          <button @click=toEdit(shipIndex[ship.舰名])>编辑</button>
-        </td>
+      <tr>
+        <td>{{getModel.constraints.火力.min}}</td>
+        <td>{{getModel.constraints.鱼雷.min}}</td>
+        <td>{{getModel.constraints.装甲.min}}</td>
+        <td>{{getModel.constraints.对空.min}}</td>
+        <td>{{shipSum}}</td>
       </tr>
     </table>
-    <div class="edit" v-if="isAdd">
-      <div class="edit-container">
-        <div><label for="索引">索引</label>：<input id="索引" name="索引" v-model="editIndex"></div>
-        <div><label for="舰名">舰名</label>：<input id="舰名" name="舰名" v-model="ship.舰名"></div>
-        <div><label for="舰种">舰种</label>：<input id="舰种" v-model="ship.舰种"></div>
-        <div><label for="油">油</label>：<input id="油" v-model.number="ship.油" type="number"></div>
-        <div><label for="弹">弹</label>：<input id="弹" v-model.number="ship.弹" type="number"></div>
-        <div><label for="钢">钢</label>：<input id="钢" v-model.number="ship.钢" type="number"></div>
-        <div><label for="铝">铝</label>：<input id="铝" v-model.number="ship.铝" type="number"></div>
-        <div><label for="火力">火力</label>：<input id="火力" v-model.number="ship.火力" type="number"></div>
-        <div><label for="鱼雷">鱼雷</label>：<input id="鱼雷" v-model.number="ship.鱼雷" type="number"></div>
-        <div><label for="装甲">装甲</label>：<input id="装甲" v-model.number="ship.装甲" type="number"></div>
-        <div><label for="对空">对空</label>：<input id="对空" v-model.number="ship.对空" type="number"></div>
-        <div><label for="数量">数量</label>：<input id="数量" v-model.number="ship.数量" type="number"></div>
-        <div style="display: flex;justify-content: center;">
-          <button @click="addShip({ship,index:editIndex});isAdd=false">保存</button>
-          <button @click="cancelAdd">取消</button>
+    <table>
+      <tr>
+        <th>火力强化</th>
+        <th>鱼雷强化</th>
+        <th>装甲强化</th>
+        <th>对空强化</th>
+        <th>总消耗</th>
+        <th>总数量</th>
+      </tr>
+      <tr>
+        <td>{{resData.火力}}</td>
+        <td>{{resData.鱼雷}}</td>
+        <td>{{resData.装甲}}</td>
+        <td>{{resData.对空}}</td>
+        <td>{{resData.总消耗}}</td>
+        <td>{{resData.总数量}}</td>
+      </tr>
+    </table>
+    <table v-show=res[0]>
+      <tr>
+        <th>舰名</th>
+        <th>数量</th>
+      </tr>
+      <tr v-for="(ship,index) in res" :key=index>
+        <td>{{ship[0]}}</td>
+        <td>{{ship[1]}}</td>
+      </tr>
+    </table>
+  </div>
+  <table>
+    <tr>
+      <th>舰名</th>
+      <th>舰种</th>
+      <th>火力</th>
+      <th>鱼雷</th>
+      <th>装甲</th>
+      <th>对空</th>
+      <th>数量</th>
+      <th>操作</th>
+    </tr>
+    <tr v-for="(ship,index) in shipData" :key=index>
+      <td>{{ ship.舰名 }}</td>
+      <td>{{ ship.舰种 }}</td>
+      <td>{{ ship.火力 }}</td>
+      <td>{{ ship.鱼雷 }}</td>
+      <td>{{ ship.装甲 }}</td>
+      <td>{{ ship.对空 }}</td>
+      <td>
+        <div style="display: flex;/*! flex-direction: row; */">
+          <button @click=changeShipSum(shipIndex[ship.舰名],-1)>-</button>
+          {{ ship.数量 }}
+          <button @click=changeShipSum(shipIndex[ship.舰名],1)>+</button>
         </div>
+      </td>
+      <td>
+        <button @click=toEdit(shipIndex[ship.舰名])>编辑</button>
+      </td>
+    </tr>
+  </table>
+  <div class="edit" v-if="isAdd">
+    <div class="edit-container">
+      <div><label for="索引">索引</label>：<input id="索引" name="索引" v-model="editIndex"></div>
+      <div><label for="舰名">舰名</label>：<input id="舰名" name="舰名" v-model="ship.舰名"></div>
+      <div><label for="舰种">舰种</label>：<input id="舰种" v-model="ship.舰种"></div>
+      <div><label for="油">油</label>：<input id="油" v-model.number="ship.油" type="number"></div>
+      <div><label for="弹">弹</label>：<input id="弹" v-model.number="ship.弹" type="number"></div>
+      <div><label for="钢">钢</label>：<input id="钢" v-model.number="ship.钢" type="number"></div>
+      <div><label for="铝">铝</label>：<input id="铝" v-model.number="ship.铝" type="number"></div>
+      <div><label for="火力">火力</label>：<input id="火力" v-model.number="ship.火力" type="number"></div>
+      <div><label for="鱼雷">鱼雷</label>：<input id="鱼雷" v-model.number="ship.鱼雷" type="number"></div>
+      <div><label for="装甲">装甲</label>：<input id="装甲" v-model.number="ship.装甲" type="number"></div>
+      <div><label for="对空">对空</label>：<input id="对空" v-model.number="ship.对空" type="number"></div>
+      <div><label for="数量">数量</label>：<input id="数量" v-model.number="ship.数量" type="number"></div>
+      <div style="display: flex;justify-content: center;">
+        <button @click="addShip({ship,index:editIndex});isAdd=false">保存</button>
+        <button @click="cancelAdd">取消</button>
       </div>
     </div>
-    <div class="edit" v-if="isEdit">
-      <div class="edit-container">
-        <div><label for="索引">索引</label>：{{editIndex}}</div>
-        <div><label for="舰名">舰名</label>：<input id="舰名" name="舰名" v-model="ship.舰名"></div>
-        <div><label for="舰种">舰种</label>：<input id="舰种" v-model="ship.舰种"></div>
-        <div><label for="油">油</label>：<input id="油" v-model.number="ship.油" type="number"></div>
-        <div><label for="弹">弹</label>：<input id="弹" v-model.number="ship.弹" type="number"></div>
-        <div><label for="钢">钢</label>：<input id="钢" v-model.number="ship.钢" type="number"></div>
-        <div><label for="铝">铝</label>：<input id="铝" v-model.number="ship.铝" type="number"></div>
-        <div><label for="火力">火力</label>：<input id="火力" v-model.number="ship.火力" type="number"></div>
-        <div><label for="鱼雷">鱼雷</label>：<input id="鱼雷" v-model.number="ship.鱼雷" type="number"></div>
-        <div><label for="装甲">装甲</label>：<input id="装甲" v-model.number="ship.装甲" type="number"></div>
-        <div><label for="对空">对空</label>：<input id="对空" v-model.number="ship.对空" type="number"></div>
-        <div><label for="数量">数量</label>：<input id="数量" v-model.number="ship.数量" type="number"></div>
-        <div style="display: flex;justify-content: center;">
-          <button @click="saveship(editIndex)">保存</button>
-          <button @click="addShip({index:editIndex,add:1});isEdit=false">删除</button>
-          <button @click="cancelEdit">取消</button>
-        </div>
+  </div>
+  <div class="edit" v-if="isEdit">
+    <div class="edit-container">
+      <div><label for="索引">索引</label>：{{editIndex}}</div>
+      <div><label for="舰名">舰名</label>：<input id="舰名" name="舰名" v-model="ship.舰名"></div>
+      <div><label for="舰种">舰种</label>：<input id="舰种" v-model="ship.舰种"></div>
+      <div><label for="油">油</label>：<input id="油" v-model.number="ship.油" type="number"></div>
+      <div><label for="弹">弹</label>：<input id="弹" v-model.number="ship.弹" type="number"></div>
+      <div><label for="钢">钢</label>：<input id="钢" v-model.number="ship.钢" type="number"></div>
+      <div><label for="铝">铝</label>：<input id="铝" v-model.number="ship.铝" type="number"></div>
+      <div><label for="火力">火力</label>：<input id="火力" v-model.number="ship.火力" type="number"></div>
+      <div><label for="鱼雷">鱼雷</label>：<input id="鱼雷" v-model.number="ship.鱼雷" type="number"></div>
+      <div><label for="装甲">装甲</label>：<input id="装甲" v-model.number="ship.装甲" type="number"></div>
+      <div><label for="对空">对空</label>：<input id="对空" v-model.number="ship.对空" type="number"></div>
+      <div><label for="数量">数量</label>：<input id="数量" v-model.number="ship.数量" type="number"></div>
+      <div style="display: flex;justify-content: center;">
+        <button @click="saveship(editIndex)">保存</button>
+        <button @click="addShip({index:editIndex,add:1});isEdit=false">删除</button>
+        <button @click="cancelEdit">取消</button>
       </div>
     </div>
+  </div>
   </div>
 </body>
 
