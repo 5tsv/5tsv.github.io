@@ -238,7 +238,7 @@
   Vue.use(Vuex)
   const store = new Vuex.Store({
     state: {
-      shipData: loadState('shipData'),
+      shipData: loadState('shipData')||[],
       weight: loadState('weight') || {
         '驱逐舰': 1,
         '轻巡洋舰': 1,
