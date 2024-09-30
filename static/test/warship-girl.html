@@ -210,8 +210,8 @@
     </div>
     <div class="edit" v-if="isModelSet">
       <div class="edit-container">
-        <div><label for="timeout">timeout</label></div><div><input id="timeout" name="timeout" v-model.number="modelSetting.timeout" type="number"></div>
-        <div><label for="tolerance">tolerance</label></div><div><input id="tolerance" name="tolerance" v-model.number="modelSetting.tolerance" type="number"></div>
+        <div><label for="timeout">timeout：{{timeout/1000}}s</label></div><div><input id="timeout" name="timeout" v-model.number="timeout" type="number"></div>
+        <div><label for="tolerance">tolerance：{{tolerance}}%</label></div><div><input id="tolerance" name="tolerance" v-model.number="tolerance" type="number"></div>
         <div style="display: flex;justify-content: center;">
           <button @click="isModelSet=false">关闭</button>
         </div>
@@ -298,10 +298,13 @@
         else { state.shipData.splice(index, add, ship) }
         saveState('shipData', state.shipData)
       },
-      setmodelSetting(state,modelSetting){
-        console.log(modelSetting);
-        state.modelSetting=modelSetting
-        saveState('modelSetting',modelSetting)
+      setMpdelTimeout(state,value){
+        state.modelSetting.timeout=value||1000
+        saveState('modelSetting',state.modelSetting)
+      },
+      setMpdelTolerance(state,value){
+        state.modelSetting.tolerance=value||0.05
+        saveState('modelSetting',state.modelSetting)
       }
     },
     getters: {
@@ -353,7 +356,7 @@
     el: '#app',
     data: {
       message: 'Hello Vue!',
-      version:"24_0930_11",
+      version:"24.1001.00",
       isEdit: false,
       isAdd: false,
       isModelSet:false,
@@ -362,7 +365,7 @@
       res: []
     },
     created() {
-      console.log(this.version)
+      console.log(`version:${this.version}`)
       if (!loadState('shipData')) {
         console.log('初始化')
         this.resetShipData()
@@ -402,14 +405,20 @@
         })
         return temp
       },
-      modelSetting:{
+      timeout:{
         get(){
-          return this.$store.state.modelSetting
+          return this.$store.state.modelSetting.timeout
         },
-        set(modelSetting){
-          modelSetting.timeout=modelSetting.timeout || 1000
-          modelSetting.tolerance=modelSetting.tolerance||0.05
-          this.store.commit('setmodelSetting',modelSetting)
+        set(value){
+          this.$store.commit('setMpdelTimeout',value)
+        }
+      },
+      tolerance:{
+        get(){
+          return this.$store.state.modelSetting.tolerance
+        },
+        set(value){
+          this.$store.commit('setMpdelTolerance',value)
         }
       }
     },
@@ -469,12 +478,13 @@
       downloadData() {
         // 将JSON对象转换为字符串
         const dataString = JSON.stringify(this.shipData);
+        const date=new Date()
         // 创建Blob对象
         const blob = new Blob([dataString], { type: 'text/plain' });
         // 创建一个a标签模拟点击下载
         const link = document.querySelector("#download-link")
         link.href = window.URL.createObjectURL(blob);
-        link.download = "shipData.txt"
+        link.download = `shipData_${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${String(date.getHours()).padStart(2, '0')}.txt`
         link.dispatchEvent(new MouseEvent("click"));
       },
       loadJsonFile(event) {
