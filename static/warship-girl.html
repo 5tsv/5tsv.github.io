@@ -271,7 +271,7 @@
         '对空': 30
       },
       modelSetting:loadState('modelSetting') || {
-        timeout:1000,
+        timeout:1000000,
         tolerance:0.05
       }
     },
@@ -299,7 +299,7 @@
         saveState('shipData', state.shipData)
       },
       setMpdelTimeout(state,value){
-        state.modelSetting.timeout=value||1000
+        state.modelSetting.timeout=value||1000000
         saveState('modelSetting',state.modelSetting)
       },
       setMpdelTolerance(state,value){
