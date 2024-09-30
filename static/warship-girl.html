@@ -298,10 +298,13 @@
         else { state.shipData.splice(index, add, ship) }
         saveState('shipData', state.shipData)
       },
-      setmodelSetting(state,modelSetting){
-        console.log(modelSetting);
-        state.modelSetting=modelSetting
-        saveState('modelSetting',modelSetting)
+      setMpdelTimeout(state,value){
+        state.modelSetting.timeout=value||1000
+        saveState('modelSetting',state.modelSetting)
+      },
+      setMpdelTolerance(state,value){
+        state.modelSetting.tolerance=value||0.05
+        saveState('modelSetting',state.modelSetting)
       }
     },
     getters: {
@@ -402,14 +405,20 @@
         })
         return temp
       },
-      modelSetting:{
+      timeout:{
         get(){
-          return this.$store.state.modelSetting
+          return this.$store.state.modelSetting.timeout
         },
-        set(modelSetting){
-          modelSetting.timeout=modelSetting.timeout || 1000
-          modelSetting.tolerance=modelSetting.tolerance||0.05
-          this.store.commit('setmodelSetting',modelSetting)
+        set(value){
+          this.$store.commit('setMpdelTimeout',value)
+        }
+      },
+      tolerance:{
+        get(){
+          return this.$store.state.modelSetting.tolerance
+        },
+        set(value){
+          this.$store.commit('setMpdelTolerance',value)
         }
       }
     },
