@@ -210,11 +210,10 @@
     </div>
     <div class="edit" v-if="isModelSet">
       <div class="edit-container">
-        <div><label for="timeout">timeout</label>：<input id="timeout" name="timeout" :value="modelSetting.timeout"></div>
-        <div><label for="tolerance">tolerance</label>：<input id="tolerance" name="tolerance" :value="modelSetting.tolerance"></div>
+        <div><label for="timeout">timeout</label>：<input id="timeout" name="timeout" v-model.number="modelSetting.timeout"></div>
+        <div><label for="tolerance">tolerance</label>：<input id="tolerance" name="tolerance" v-model.number="modelSetting.tolerance"></div>
         <div style="display: flex;justify-content: center;">
-          <button @click="setmodelSetting(/*待完善*/);isModelSet=false">保存</button>
-          <button @click="isModelSet=false">取消</button>
+          <button @click="isModelSet=false">关闭</button>
         </div>
       </div>
     </div>
@@ -371,7 +370,7 @@
     },
     store,
     computed: {
-      ...Vuex.mapState(['shipData', 'weight', 'user','modelSetting']),
+      ...Vuex.mapState(['shipData', 'weight', 'user']),
       ...Vuex.mapGetters(['extraShip', 'shipIndex', 'ships', 'getModel']),
       shipSum() {
         let temp = {}
@@ -402,6 +401,14 @@
           temp.总数量 += x
         })
         return temp
+      },
+      modelSetting:{
+        get(){
+          return this.$store.state.modelSetting
+        },
+        set(modelSetting){
+          this.store.commit('setmodelSetting',modelSetting)
+        }
       }
     },
     methods: {
