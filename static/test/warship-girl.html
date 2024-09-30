@@ -210,8 +210,8 @@
     </div>
     <div class="edit" v-if="isModelSet">
       <div class="edit-container">
-        <div><label for="timeout">timeout</label>：<input id="timeout" name="timeout" v-model.number="modelSetting.timeout"></div>
-        <div><label for="tolerance">tolerance</label>：<input id="tolerance" name="tolerance" v-model.number="modelSetting.tolerance"></div>
+        <div><label for="timeout">timeout</label></div><div><input id="timeout" name="timeout" v-model.number="modelSetting.timeout" type="number"></div>
+        <div><label for="tolerance">tolerance</label></div><div><input id="tolerance" name="tolerance" v-model.number="modelSetting.tolerance" type="number"></div>
         <div style="display: flex;justify-content: center;">
           <button @click="isModelSet=false">关闭</button>
         </div>
@@ -407,6 +407,8 @@
           return this.$store.state.modelSetting
         },
         set(modelSetting){
+          modelSetting.timeout=modelSetting.timeout || 1000
+          modelSetting.tolerance=modelSetting.tolerance||0.05
           this.store.commit('setmodelSetting',modelSetting)
         }
       }
