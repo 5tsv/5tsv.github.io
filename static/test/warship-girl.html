@@ -6,12 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <link rel="icon" href="/dist/favicon.ico" />
-  <!-- <script src="https://unpkg.com/vue@2"></script>
-  <script src="https://unpkg.com/vuex@3"></script>
-  <script src="https://unpkg.com/javascript-lp-solver/prod/solver.js"></script> -->
   <script src="./vue.js"></script>
   <script src="./vuex.js"></script>
   <script src="./solver.js"></script>
+  <script>
+    if (typeof Vue === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22https://unpkg.com/vue@2%22%3E%3C/script%3E'));}
+    if (typeof Vuex === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22https://unpkg.com/vuex@3%22%3E%3C/script%3E'));}
+    if (typeof solver === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22https://unpkg.com/javascript-lp-solver/prod/solver.js%22%3E%3C/script%3E'));}
+  </script>
   <title>Vue App</title>
 </head>
 
@@ -85,18 +87,24 @@
     <div>
       <table>
         <tr>
+          <th v-for="ship in Object.keys(shipSum)">{{ship}}</th>
+        </tr>
+        <tr>
+          <td v-for="ship in shipSum">{{ship}}</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
           <th>火力需求</th>
           <th>鱼雷需求</th>
           <th>装甲需求</th>
           <th>对空需求</th>
-          <th>可强化舰船数</th>
         </tr>
         <tr>
           <td>{{getModel.constraints.火力.min}}</td>
           <td>{{getModel.constraints.鱼雷.min}}</td>
           <td>{{getModel.constraints.装甲.min}}</td>
           <td>{{getModel.constraints.对空.min}}</td>
-          <td>{{shipSum}}</td>
         </tr>
       </table>
       <table>
@@ -331,6 +339,7 @@
     el: '#app',
     data: {
       message: 'Hello Vue!',
+      version:"24_0930_09",
       isEdit: false,
       isAdd: false,
       editIndex: -1,
@@ -348,8 +357,11 @@
       ...Vuex.mapState(['shipData', 'weight', 'user']),
       ...Vuex.mapGetters(['extraShip', 'shipIndex', 'ships', 'getModel']),
       shipSum() {
-        temp = 0
-        this.extraShip.forEach(ship => { temp += ship.数量 })
+        let temp = {}
+        this.extraShip.forEach(ship => {
+          temp['可强化舰船数']=(temp['可强化舰船数']||0)+ship.数量
+          temp[ship.舰种]=(temp[ship.舰种]||0)+ship.数量
+        })
         return temp
       },
       resData() {
@@ -419,7 +431,7 @@
         alert('计算完成')
         this.extraShip.forEach(item => {
           if (res[item.舰名] != undefined) {
-            temp = [item.舰名, res[item.舰名]]
+            temp = [item.舰名, Math.ceil(res[item.舰名])]
             console.log(temp)
             this.res.push(temp)
           }
@@ -456,13 +468,6 @@
         } else {
           console.log('No file selected');
         }
-      },
-      changeShipSum(index, number) {
-        //console.log(index,number)
-        let ship = Object.assign({}, this.shipData[index])
-        //console.log(ship)
-        ship.数量 += number
-        this.changeShip({ ship, index })
       },
       resetShipData() {
         shipData = [{
@@ -3395,6 +3400,13 @@
           '数量': 0
         }]
         this.updateData(shipData)
+      },
+      changeShipSum(index, number) {
+        //console.log(index,number)
+        let ship = Object.assign({}, this.shipData[index])
+        //console.log(ship)
+        ship.数量 += number
+        this.changeShip({ ship, index })
       }
     }
   })
