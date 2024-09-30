@@ -469,12 +469,13 @@
       downloadData() {
         // 将JSON对象转换为字符串
         const dataString = JSON.stringify(this.shipData);
+        const date=new Date()
         // 创建Blob对象
         const blob = new Blob([dataString], { type: 'text/plain' });
         // 创建一个a标签模拟点击下载
         const link = document.querySelector("#download-link")
         link.href = window.URL.createObjectURL(blob);
-        link.download = "shipData.txt"
+        link.download = `shipData_${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${String(date.getHours()).padStart(2, '0')}.txt`
         link.dispatchEvent(new MouseEvent("click"));
       },
       loadJsonFile(event) {
