@@ -79,6 +79,9 @@
             </td>
             <td><button @click="downloadData">导出</button></td>
           </tr>
+          <tr>
+            <td><button @click="tomodelSetting">计算参数设置</button></td>
+          </tr>
         </table>
       </div>
     </div>
@@ -205,6 +208,16 @@
         </div>
       </div>
     </div>
+    <div class="edit" v-if="isModelSet">
+      <div class="edit-container">
+        <div><label for="timeout">timeout</label>：<input id="timeout" name="timeout" :value="modelSetting.timeout"></div>
+        <div><label for="tolerance">tolerance</label>：<input id="tolerance" name="tolerance" :value="modelSetting.tolerance"></div>
+        <div style="display: flex;justify-content: center;">
+          <button @click="setmodelSetting(/*待完善*/);isModelSet=false">保存</button>
+          <button @click="isModelSet=false">取消</button>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 <script>
@@ -257,6 +270,10 @@
         '鱼雷': 55,
         '装甲': 25,
         '对空': 30
+      },
+      modelSetting:loadState('modelSetting') || {
+        timeout:1000,
+        tolerance:0.05
       }
     },
     //strict: true,
@@ -282,6 +299,11 @@
         else { state.shipData.splice(index, add, ship) }
         saveState('shipData', state.shipData)
       },
+      setmodelSetting(state,modelSetting){
+        console.log(modelSetting);
+        state.modelSetting=modelSetting
+        saveState('modelSetting',modelSetting)
+      }
     },
     getters: {
       extraShip(state) {
@@ -300,10 +322,7 @@
       getModel(state, getters) {
         model = {
           'optimize': '消耗',
-          'options': {
-            'timeout': 1000000,
-            'tolerance': 0.05
-          },
+          'options': state.modelSetting,
           'opType': 'min',
           'constraints': {
             '火力': { 'min': state.user.经验 * state.user.火力 },
@@ -338,6 +357,7 @@
       version:"24_0930_11",
       isEdit: false,
       isAdd: false,
+      isModelSet:false,
       editIndex: -1,
       ship: {},
       res: []
@@ -351,7 +371,7 @@
     },
     store,
     computed: {
-      ...Vuex.mapState(['shipData', 'weight', 'user']),
+      ...Vuex.mapState(['shipData', 'weight', 'user','modelSetting']),
       ...Vuex.mapGetters(['extraShip', 'shipIndex', 'ships', 'getModel']),
       shipSum() {
         let temp = {}
@@ -385,7 +405,7 @@
       }
     },
     methods: {
-      ...Vuex.mapMutations(['updateData', 'changeShip', 'setWeight', 'addShip']),
+      ...Vuex.mapMutations(['updateData', 'changeShip', 'setWeight', 'addShip','setmodelSetting']),
       refreshData() {
         this.res.forEach(
           ship => {
@@ -447,7 +467,6 @@
         link.href = window.URL.createObjectURL(blob);
         link.download = "shipData.txt"
         link.dispatchEvent(new MouseEvent("click"));
-
       },
       loadJsonFile(event) {
         const file = event.target.files[0]; // 获取选中的文件
@@ -472,6 +491,9 @@
         //console.log(ship)
         ship.数量 += number
         this.changeShip({ ship, index })
+      },
+      tomodelSetting(){
+        this.isModelSet=true
       },
       async resetShipData() {
         let response=await fetch("https://5tsv.github.io/static/test/shipData.json")
