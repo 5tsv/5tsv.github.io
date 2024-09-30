@@ -210,8 +210,8 @@
     </div>
     <div class="edit" v-if="isModelSet">
       <div class="edit-container">
-        <div><label for="timeout">timeout：{{timeout/1000}}s</label></div><div><input id="timeout" name="timeout" v-model.number="timeout" type="number"></div>
-        <div><label for="tolerance">tolerance：{{tolerance}}%</label></div><div><input id="tolerance" name="tolerance" v-model.number="tolerance" type="number"></div>
+        <div><label for="timeout">timeout:{{timeout/1000}}s</label></div><div><input id="timeout" name="timeout" v-model.number="timeout" type="number"></div>
+        <div><label for="tolerance">tolerance:{{tolerance}}%</label></div><div><input id="tolerance" name="tolerance" v-model.number="tolerance" type="number"></div>
         <div style="display: flex;justify-content: center;">
           <button @click="isModelSet=false">关闭</button>
         </div>
