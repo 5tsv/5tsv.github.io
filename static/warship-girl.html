@@ -148,7 +148,7 @@
         <th>数量</th>
         <th>操作</th>
       </tr>
-      <tr v-for="(ship,index) in shipData" :key=index>
+      <tr v-for="(ship,index) in shipData" :key=index :class="{ active: ship.数量 > 0 }">
         <td>{{ ship.舰名 }}</td>
         <td>{{ ship.舰种 }}</td>
         <td>{{ ship.火力 }}</td>
@@ -356,7 +356,7 @@
     el: '#app',
     data: {
       message: 'Hello Vue!',
-      version:"24.1001.00",
+      version:"24.1010.11",
       isEdit: false,
       isAdd: false,
       isModelSet:false,
@@ -573,6 +573,9 @@
   }
   td input {
     width: 60px;
+  }
+  .active {
+    background-color: #baefef
   }
 </style>
 </html>
