@@ -157,9 +157,27 @@
         <td>{{ ship.对空 }}</td>
         <td>
           <div style="display: flex;/*! flex-direction: row; */">
-            <button @click=changeShipSum(shipIndex[ship.舰名],-1)>-</button>
+            <button
+              @mousedown.prevent="startLongPress(shipIndex[ship.舰名],-1)"
+              @touchstart.prevent="startLongPress(shipIndex[ship.舰名],-1)"
+              @mouseup="stopLongPress(shipIndex[ship.舰名],-1)"
+              @touchend="stopLongPress(shipIndex[ship.舰名],-1)"
+              @mouseleave="stopLongPress"
+              @touchmove="stopLongPress"
+            >
+              -
+            </button>
             {{ ship.数量 }}
-            <button @click=changeShipSum(shipIndex[ship.舰名],1)>+</button>
+            <button
+              @mousedown.prevent="startLongPress(shipIndex[ship.舰名],1)"
+              @touchstart.prevent="startLongPress(shipIndex[ship.舰名],1)"
+              @mouseup="stopLongPress(shipIndex[ship.舰名],1)"
+              @touchend="stopLongPress(shipIndex[ship.舰名],1)"
+              @mouseleave="stopLongPress"
+              @touchmove="stopLongPress"
+            >
+              +
+            </button>
           </div>
         </td>
         <td>
@@ -356,13 +374,15 @@
     el: '#app',
     data: {
       message: 'Hello Vue!',
-      version:"24.1010.11",
+      version:"24.1013.16",
       isEdit: false,
       isAdd: false,
       isModelSet:false,
       editIndex: -1,
       ship: {},
-      res: []
+      res: [],
+      longPressTimer: null,
+      longPressed: false, // 表示是否已经开始长按
     },
     created() {
       console.log(`version:${this.version}`)
@@ -510,6 +530,22 @@
         //console.log(ship)
         ship.数量 += number
         this.changeShip({ ship, index })
+      },
+      startLongPress(index,n) {
+        this.longPressTimer = setTimeout(() => {
+          this.longPressTimer = setInterval(()=>this.changeShipSum(index,n), 100);
+          this.longPressed = true;
+        }, 500);
+      },
+      stopLongPress(index,n) {
+        if (this.longPressTimer) {
+          clearInterval(this.longPressTimer);
+          this.longPressTimer = null;
+          this.longPressed = false;
+        }
+        this.$nextTick(() => {
+          this.longPressed || this.changeShipSum(index,n); // 如果没有长按发生，则增加计数
+        });
       },
       tomodelSetting(){
         this.isModelSet=true
