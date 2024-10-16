@@ -155,7 +155,7 @@
         <td>{{ ship.鱼雷 }}</td>
         <td>{{ ship.装甲 }}</td>
         <td>{{ ship.对空 }}</td>
-        <td>
+        <td style="touch-action: none;">
           <div style="display: flex;/*! flex-direction: row; */">
             <button
               @mousedown.prevent="startLongPress(shipIndex[ship.舰名],-1)"
@@ -374,7 +374,7 @@
     el: '#app',
     data: {
       message: 'Hello Vue!',
-      version:"24.1013.16",
+      version:"24.1016.19",
       isEdit: false,
       isAdd: false,
       isModelSet:false,
