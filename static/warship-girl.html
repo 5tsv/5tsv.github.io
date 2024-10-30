@@ -96,6 +96,14 @@
       </table>
       <table>
         <tr>
+          <th v-for="ship in Object.keys(totalData)">{{ship}}</th>
+        </tr>
+        <tr>
+          <td v-for="ship in totalData">{{ship}}</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
           <th>火力需求</th>
           <th>鱼雷需求</th>
           <th>装甲需求</th>
@@ -310,11 +318,11 @@
         else { state.shipData.splice(index, add, ship) }
         saveState('shipData', state.shipData)
       },
-      setMpdelTimeout(state,value){
+      setModelTimeout(state,value){
         state.modelSetting.timeout=value||1000000
         saveState('modelSetting',state.modelSetting)
       },
-      setMpdelTolerance(state,value){
+      setModelTolerance(state,value){
         state.modelSetting.tolerance=value||0.05
         saveState('modelSetting',state.modelSetting)
       }
@@ -368,7 +376,7 @@
     el: '#app',
     data: {
       message: 'Hello Vue!',
-      version:"24.1016.20",
+      version:"24.1031.01",
       isEdit: false,
       isAdd: false,
       isModelSet:false,
@@ -394,6 +402,22 @@
         this.extraShip.forEach(ship => {
           temp['可强化舰船数']=(temp['可强化舰船数']||0)+ship.数量
           temp[ship.舰种]=(temp[ship.舰种]||0)+ship.数量
+        })
+        return temp
+      },
+      totalData() {
+        let temp = {
+          可用火力: 0,
+          可用鱼雷: 0,
+          可用装甲: 0,
+          可用对空: 0
+        }
+        let variables=this.getModel.variables
+        this.extraShip.forEach(ship => {
+          temp['可用火力'] = temp['可用火力'] + ship.数量*variables[ship.舰名]['火力']
+          temp['可用鱼雷'] = temp['可用鱼雷'] + ship.数量*variables[ship.舰名]['鱼雷']
+          temp['可用装甲'] = temp['可用装甲'] + ship.数量*variables[ship.舰名]['装甲']
+          temp['可用对空'] = temp['可用对空'] + ship.数量*variables[ship.舰名]['对空']
         })
         return temp
       },
@@ -424,7 +448,7 @@
           return this.$store.state.modelSetting.timeout
         },
         set(value){
-          this.$store.commit('setMpdelTimeout',value)
+          this.$store.commit('setModelTimeout',value)
         }
       },
       tolerance:{
@@ -432,7 +456,7 @@
           return this.$store.state.modelSetting.tolerance
         },
         set(value){
-          this.$store.commit('setMpdelTolerance',value)
+          this.$store.commit('setModelTolerance',value)
         }
       }
     },
