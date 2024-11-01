@@ -1,20 +1,22 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
-  <link rel="icon" href="/dist/favicon.ico" />
-  <script src="./vue.js"></script>
-  <script src="./vuex.js"></script>
-  <script src="./solver.js"></script>
+  <link rel="icon" href="./favicon.ico" />
+  <script src="https://unpkg.com/vue@2"></script>
+  <script src="https://unpkg.com/vuex@3"></script>
+  <script src="https://unpkg.com/javascript-lp-solver/prod/solver.js"></script>
   <script>
-    if (typeof Vue === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22https://unpkg.com/vue@2%22%3E%3C/script%3E'));}
-    if (typeof Vuex === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22https://unpkg.com/vuex@3%22%3E%3C/script%3E'));}
-    if (typeof solver === 'undefined') {document.write(decodeURI('%3Cscript%20src=%22https://unpkg.com/javascript-lp-solver/prod/solver.js%22%3E%3C/script%3E'));}
+    if (typeof Vue === 'undefined') { document.write(decodeURI('%3Cscript%20src=%22./vue.js%22%3E%3C/script%3E')); }
+    if (typeof Vuex === 'undefined') { document.write(decodeURI('%3Cscript%20src=%22./vuex.js%22%3E%3C/script%3E')); }
+    if (typeof solver === 'undefined') { document.write(decodeURI('%3Cscript%20src=%22./solver.js%22%3E%3C/script%3E')); }
   </script>
   <title>Vue App</title>
 </head>
+
 <body>
   <div id="app">
     <div style="display: grid;grid-template-columns: repeat(auto-fit,310px);">
@@ -24,8 +26,8 @@
             <th colspan=" 2">工程局系数</th>
           </tr>
           <tr v-for="(item,index) in Object.keys(weight).filter(i=>i.length>1)" :key="index">
-          <th>{{item}}</th>
-          <td><input v-model.number="weight[item]" type="number">
+            <th>{{item}}</th>
+            <td><input v-model.number="weight[item]" type="number">
             </td>
           </tr>
         </table>
@@ -94,7 +96,7 @@
           <td v-for="ship in shipSum">{{ship}}</td>
         </tr>
       </table>
-      <table>
+      <table v-show="extraShip[0]">
         <tr>
           <th v-for="ship in Object.keys(totalData)">{{ship}}</th>
         </tr>
@@ -156,7 +158,7 @@
         <th>数量</th>
         <th>操作</th>
       </tr>
-      <tr v-for="(ship,index) in shipData" :key=index :class="{ active: ship.数量 > 0 }">
+      <tr v-for="(ship,index) in shipData" :key=index :class="{ active: ship.数量>0 }">
         <td>{{ ship.舰名 }}</td>
         <td>{{ ship.舰种 }}</td>
         <td>{{ ship.火力 }}</td>
@@ -230,8 +232,10 @@
     </div>
     <div class="edit" v-if="isModelSet">
       <div class="edit-container">
-        <div><label for="timeout">timeout:{{timeout/1000}}s</label></div><div><input id="timeout" name="timeout" v-model.number="timeout" type="number"></div>
-        <div><label for="tolerance">tolerance:{{tolerance}}%</label></div><div><input id="tolerance" name="tolerance" v-model.number="tolerance" type="number"></div>
+        <div><label for="timeout">timeout:{{timeout/1000}}s</label></div>
+        <div><input id="timeout" name="timeout" v-model.number="timeout" type="number"></div>
+        <div><label for="tolerance">tolerance:{{tolerance}}%</label></div>
+        <div><input id="tolerance" name="tolerance" v-model.number="tolerance" type="number"></div>
         <div style="display: flex;justify-content: center;">
           <button @click="isModelSet=false">关闭</button>
         </div>
@@ -270,7 +274,7 @@
   Vue.use(Vuex)
   const store = new Vuex.Store({
     state: {
-      shipData: loadState('shipData')||[],
+      shipData: loadState('shipData') || [],
       weight: loadState('weight') || {
         '驱逐舰': 1,
         '轻巡洋舰': 1,
@@ -290,9 +294,9 @@
         '装甲': 25,
         '对空': 30
       },
-      modelSetting:loadState('modelSetting') || {
-        timeout:1000000,
-        tolerance:0.05
+      modelSetting: loadState('modelSetting') || {
+        timeout: 1000000,
+        tolerance: 0.05
       }
     },
     //strict: true,
@@ -318,13 +322,13 @@
         else { state.shipData.splice(index, add, ship) }
         saveState('shipData', state.shipData)
       },
-      setModelTimeout(state,value){
-        state.modelSetting.timeout=value||1000000
-        saveState('modelSetting',state.modelSetting)
+      setModelTimeout(state, value) {
+        state.modelSetting.timeout = value || 1000000
+        saveState('modelSetting', state.modelSetting)
       },
-      setModelTolerance(state,value){
-        state.modelSetting.tolerance=value||0.05
-        saveState('modelSetting',state.modelSetting)
+      setModelTolerance(state, value) {
+        state.modelSetting.tolerance = value || 0.05
+        saveState('modelSetting', state.modelSetting)
       }
     },
     getters: {
@@ -332,7 +336,7 @@
         return state.shipData.filter(ship => ship.数量 > 0)
       },
       shipIndex(state) {
-        temp = {}
+        let temp = {}
         state.shipData.forEach((ship, index) => {
           temp[ship.舰名] = index
         })
@@ -376,10 +380,10 @@
     el: '#app',
     data: {
       message: 'Hello Vue!',
-      version:"24.1031.01",
+      version: "24.1101.11",
       isEdit: false,
       isAdd: false,
-      isModelSet:false,
+      isModelSet: false,
       editIndex: -1,
       ship: {},
       res: [],
@@ -400,8 +404,8 @@
       shipSum() {
         let temp = {}
         this.extraShip.forEach(ship => {
-          temp['可强化舰船数']=(temp['可强化舰船数']||0)+ship.数量
-          temp[ship.舰种]=(temp[ship.舰种]||0)+ship.数量
+          temp['可强化舰船数'] = (temp['可强化舰船数'] || 0) + ship.数量
+          temp[ship.舰种] = (temp[ship.舰种] || 0) + ship.数量
         })
         return temp
       },
@@ -443,25 +447,25 @@
         })
         return temp
       },
-      timeout:{
-        get(){
+      timeout: {
+        get() {
           return this.$store.state.modelSetting.timeout
         },
-        set(value){
-          this.$store.commit('setModelTimeout',value)
+        set(value) {
+          this.$store.commit('setModelTimeout', value)
         }
       },
-      tolerance:{
-        get(){
+      tolerance: {
+        get() {
           return this.$store.state.modelSetting.tolerance
         },
-        set(value){
-          this.$store.commit('setModelTolerance',value)
+        set(value) {
+          this.$store.commit('setModelTolerance', value)
         }
       }
     },
     methods: {
-      ...Vuex.mapMutations(['updateData', 'changeShip', 'setWeight', 'addShip','setmodelSetting']),
+      ...Vuex.mapMutations(['updateData', 'changeShip', 'setWeight', 'addShip', 'setmodelSetting']),
       refreshData() {
         this.res.forEach(
           ship => {
@@ -502,13 +506,22 @@
         res = solver.Solve(this.getModel)
         console.log(res)
         alert('计算完成')
+        let error_0=[]
+        let error_1=[]
         this.extraShip.forEach(item => {
           if (res[item.舰名] != undefined) {
-            temp = [item.舰名, Math.ceil(res[item.舰名])]
-            console.log(temp)
+            let temp = [item.舰名, Math.ceil(res[item.舰名])]
+            if (temp[1]<0){error_0.push(temp[0])}
+            if (temp[1]>this.shipData[this.shipIndex[item.舰名]]['数量']){error_1.push(temp[0])}
+            //console.log(temp)
             this.res.push(temp)
           }
         })
+        if (error_0.length>0||error_1.length>0){
+          let e=`求解出错，${error_0.length>0?'方案中的'+error_0.join("、")+'小于0，':''}${error_1.length>0?'方案中的'+error_1.join("、")+'大于舰船设定值，':''}请检查可用值是否大于需求值`
+          alert(e)
+          console.error(e)
+        }
       },
       saveStateweight() {
         this.setWeight(this.weight)
@@ -516,7 +529,7 @@
       downloadData() {
         // 将JSON对象转换为字符串
         const dataString = JSON.stringify(this.shipData);
-        const date=new Date()
+        const date = new Date()
         // 创建Blob对象
         const blob = new Blob([dataString], { type: 'text/plain' });
         // 创建一个a标签模拟点击下载
@@ -565,12 +578,13 @@
           this.longPressed || this.changeShipSum(index,n); // 如果没有长按发生，则增加计数
         });
       },
-      tomodelSetting(){
-        this.isModelSet=true
+      tomodelSetting() {
+        this.isModelSet = true
       },
       async resetShipData() {
-        let response=await fetch("https://5tsv.github.io/static/test/shipData.json")
-        let shipData=await response.json()
+        let url=location.protocol=="file:"?"https://warship-girl.pages.dev/shipData.json":"./shipData.json"
+        let response = await fetch(url)
+        let shipData = await response.json()
         this.updateData(shipData)
       }
     }
@@ -581,20 +595,24 @@
     width: auto;
     border-collapse: collapse;
   }
+
   th,
   td {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #ddd;
   }
+
   tr:hover {
     background-color: #eaeaea;
   }
+
   table {
     border: 2px solid #eed6ad;
     border-radius: 3px;
     background-color: #fff;
   }
+
   th {
     background-color: #eed6ad;
     color: rgba(89, 67, 67, 0.66);
@@ -604,6 +622,7 @@
     -ms-user-select: none;
     user-select: none;
   }
+
   .edit {
     position: fixed;
     z-index: 1300;
@@ -614,10 +633,12 @@
     flex-direction: column;
     background-color: rgba(0, 0, 0, 0.5);
   }
+
   label {
     display: inline-block;
     width: 32px;
   }
+
   .edit-container {
     margin: 0px auto;
     padding: 20px 30px;
@@ -625,6 +646,7 @@
     border-radius: 22px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   }
+
   td input {
     width: 60px;
   }
@@ -632,7 +654,8 @@
     display: flex;
   }
   .active {
-    background-color: #baefef
+    background-color: #baefef;
   }
 </style>
+
 </html>
