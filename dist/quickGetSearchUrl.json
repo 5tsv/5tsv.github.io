@@ -1,6 +1,7 @@
 [
   {
     "articleStyle": 0,
+    "concurrentRate": "",
     "customOrder": 0,
     "enableJs": true,
     "enabled": true,
