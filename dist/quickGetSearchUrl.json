@@ -2,6 +2,7 @@
   {
     "articleStyle": 0,
     "concurrentRate": "",
+    "contentWhitelist": "",
     "customOrder": 0,
     "enableJs": true,
     "enabled": true,
