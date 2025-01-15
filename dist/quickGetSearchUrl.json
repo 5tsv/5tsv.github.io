@@ -21,6 +21,7 @@
     "ruleLink": "$.index",
     "rulePubDate": "$.url",
     "ruleTitle": "$.index",
+    "shouldOverrideUrlLoading": "",
     "singleUrl": false,
     "sortUrl": "",
     "sourceComment": "/*\n11.26by河鹅和\n12.2 添加ua切换，添加复制按钮\n12.3 添加订阅更新按钮，可通过登录点击检查更新按钮来更新本订阅源\n添加多个更新地址，以防网络问题无法更新\n12.8 小优化，并添加一个给搜索地址切换webview的按钮\n12.11 添加两个搜索常用请求头按钮，小修复\n12.13 优化样式\n2025.01.15 添加生成书源，自动获取发现(可能不完整)\n*/",
